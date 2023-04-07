@@ -1,0 +1,39 @@
+{{ block title }}
+    The Experiment
+{{ endblock }}
+{{ block content }}
+<div>
+    <p>This experiment consists of one task. The following instructions will provide more detail, and you will be given
+        a quiz to ensure that you have understood the instructions. After the quiz, you will participate in the decision
+        rounds where you will be paid according to your choices.
+    </p>
+    <h4>Quiz</h4>
+    <p>It is important that you understand the instructions before you attempt the quiz. You will need to correctly answer
+        the quiz questions before progressing to the rest of the experiment. Thus, it is a good idea to be sure
+        you understand the instructions before attempting the quiz. As a reminder, you can always ask questions by
+        raising your hand, if you are unclear about any aspect of the instructions.
+    </p>
+    <h4>Earnings</h4>
+    <p>You will earn a payment based on the choices you make in this experiment. To determine the payment, the
+        computer will randomly select one of the decision rounds for payment. Your payment will be determined by your choices in
+        those rounds, and the choices of a randomly selected opponent from today's session. Importantly, any of the
+        decision rounds can be selected for payment. So, you should treat each
+        decision round like it will be the one that determines your payment.
+    </p>
+    <h4>Total earnings</h4>
+    <p>Your earnings will consist of two components.
+        First, you will earn a show-up payment of {{participation_fee}} for participating in the experiment.
+        Second, you will earn a payment based on both the choices you make, and the choices of another randomly selected participant.
+    </p>
+    <p>The 'Next' button will appear in {{ instruction_time }} seconds. When you are ready, please click "Next" to go
+        to the instructions for the experiment. </p>
+</div>
+
+<div id="next_button_div" style="visibility: hidden">
+    {{ next_button }}
+</div>
+<script>
+time = 1000 * js_vars.instruction_time;
+setTimeout(function () {document.getElementById("next_button_div").style.visibility = "visible";}, time);
+</script>
+{{ endblock }}

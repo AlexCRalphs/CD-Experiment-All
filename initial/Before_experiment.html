@@ -1,0 +1,39 @@
+{{ block title }}
+Please wait
+{{ endblock }}
+
+{{ block scripts }}
+<script>
+
+   window.onload=function runforever(){
+        let start=js_vars.start;
+        if (start===1){
+            document.getElementById("ok_button").click();
+        }
+}
+
+</script>
+
+{{ endblock }}
+
+
+{{ block styles }}
+
+<style>
+    .otree-timer {
+    display: none;
+}
+</style>
+{{ endblock }}
+
+
+
+{% block content %}
+<meta http-equiv="refresh" content="5" />
+
+<body onload="runforever()">
+<p>The experiment will start shortly.</p>
+
+    <button class="otree-btn-next btn btn-primary next-button otree-next-button" style="display:none"  id="ok_button">Continue</button>
+</body>
+{% endblock %}

@@ -1,0 +1,347 @@
+{{ block title }}
+Survey
+{{ endblock }}
+
+{{ block content }}
+<style>
+html {
+  scroll-behavior: smooth;
+}
+table, th, td {
+  border: none;
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+  height: auto;
+}
+td {
+    padding: 2px 2px 2px 3px;
+}
+p {
+  margin-bottom: 0.5rem;
+}
+input[type=text], textarea {
+  border: 1px solid grey;
+  outline: none;
+  padding: 2px;
+
+}
+input[type=text]:hover, textarea:hover {
+  border: 1px solid grey;
+  box-shadow: 0 0 2px 2px #2196F3;
+  outline: none;
+}
+input[type=text]:focus, textarea:focus {
+  border: 1px solid grey;
+  box-shadow: 0 0 2px 2px #2196F3;
+  outline: none;
+}
+label {
+    margin: auto auto auto 5px;
+}
+.toggle {
+      width:13px;
+      height:13px;
+      border-radius:50%;
+      appearance:none;
+      outline:none;
+      border:1px solid grey;
+
+    }
+    .toggle:hover {
+      box-shadow: 0 0 2px 2px #2196F3;
+    }
+    .toggle:checked {
+      box-shadow: 0 0 2px 2px #2196F3;
+	  width:12px;
+      height:12px;
+      border-radius:50%;
+      border:2px solid white;
+      background-color: grey;
+
+    }
+</style>
+<div>
+    <p id="Q1_title">What is your gender?</p>
+<table style="margin-left: 5px">
+    <tr>
+        <td id="gender_popup" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Select one of these options">
+            <input class="toggle" type="radio" name="gender" id="male" value="Male" onclick="$('#gender_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="male">Male</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="gender" id="female" value="Female" onclick="$('#gender_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="female">Female</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="gender" id="non_binary" value="Non-binary" onclick="$('#gender_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="non_binary">Non-binary</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="gender" id="prefer_not_to_say" value="Prefer no to say" onclick="$('#gender_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="prefer_not_to_say">Prefer not to say</label>
+        </td>
+    </tr>
+</table>
+<br>
+</div>
+<div>
+    <p id="Q2_title">What is your age? (Write D if you would prefer not to answer)</p>
+    <div id="age_popup" style="width: 180px" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Fill out this field">
+        <input type="text" name="age" id="age" onclick="$('#age_popup').popover('hide')">
+        <label for="age"></label>
+    </div>
+
+</div>
+<br>
+<div>
+    <p id="Q3_title">What is your nationality? (Write D if you would prefer not to answer)</p>
+    <div id="nationality_popup" style="width: 180px" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Fill out this field">
+        <input type="text" name="nationality" id="nationality" onclick="$('#nationality_popup').popover('hide')">
+        <label for="nationality"></label>
+    </div>
+
+</div>
+<br>
+<div>
+    <p id="Q4_title">Are you an undergraduate or graduate student?</p>
+<table style="margin-left: 5px">
+    <tr>
+        <td id="student_popup" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Select one of these options">
+            <input class="toggle" type="radio" name="student" id="undergrad" value="Undergraduate" onclick="$('#student_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="undergrad">Undergraduate</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="student" id="grad" value="Graduate" onclick="$('#student_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="grad">Graduate</label>
+        </td>
+    </tr>
+</table>
+<br>
+</div>
+<div>
+    <p id="Q5_title">What is your area of study?</p>
+<table style="margin-left: 5px">
+    <tr>
+        <td id="area_popup" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Select one of these options">
+            <input class="toggle" type="radio" name="area" id="biology" value="Biology" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="biology">Biology</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="business" value="Business" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="business">Business</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="comsci" value="ComSci" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="comsci">Computer Science</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="econ" value="Economics" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="econ">Economics</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="engine" value="Engineering" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="engine">Engineering</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="history" value="History" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="history">History</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="math" value="Maths" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="math">Mathematics</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="physics" value="Physics" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="physics">Physics</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="polsci" value="PolSci" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="polsci">Political Science</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="psych" value="Psych" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="psych">Psychology</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="area" id="other" value="Other" onclick="$('#area_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="other">Other</label>
+        </td>
+    </tr>
+</table>
+<br>
+</div>
+<div>
+    <p id="Q6_title">Describe how you made your decisions:</p>
+    <div id="decision_popup" style="width: 400px" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Fill out this field">
+        <textarea rows="8" cols="50" name="decision_description" id="decision_description" onclick="$('#decision_popup').popover('hide')"></textarea>
+        <label for="decision_description"></label>
+    </div>
+</div>
+<br>
+    <p>
+        Please click "Next" when you are ready to submit your answers.
+    </p>
+<button class="otree-btn-next btn btn-primary next-button otree-next-button" type="button" id="next_button" style="margin:auto" onclick="recordAnswers()">Next</button>
+
+<script>
+function recordAnswers() {
+    let answers = [0, 0, 0, 0, 0, 0];
+    let gender = document.getElementsByName("gender");
+    let age = document.getElementById("age");
+    let nationality = document.getElementById("nationality");
+    let student = document.getElementsByName("student");
+    let area = document.getElementsByName("area");
+    let decision_description = document.getElementById("decision_description");
+    var i;
+    for (i = 0; i < gender.length; i++) {
+        if (gender[i].checked === true) {
+            answers[0] = 1;
+        }
+    }
+    if (answers[0] === 0) {
+        $(document).ready(function(){
+            $("#gender_popup").popover('show');
+        });
+    }
+    if (age.value === '') {
+        answers[1] = 0;
+    } else {
+        answers[1] = 1;
+    }
+    if (answers[1] === 0) {
+        $(document).ready(function(){
+            $("#age_popup").popover('show');
+        });
+    }
+    if (nationality.value === '') {
+        answers[2] = 0;
+    } else {
+        answers[2] = 1;
+    }
+    if (answers[2] === 0) {
+        $(document).ready(function(){
+            $("#nationality_popup").popover('show');
+        });
+    }
+    if (student[0].checked === true) {
+        answers[3] = 1;
+    }
+    if (student[1].checked === true) {
+        answers[3] = 1;
+    }
+    if (answers[3] === 0) {
+        $(document).ready(function(){
+            $("#student_popup").popover('show');
+        });
+    }
+    for (i = 0; i < area.length; i++) {
+        if (area[i].checked === true) {
+            answers[4] = 1;
+        }
+    }
+    if (answers[4] === 0) {
+        $(document).ready(function(){
+            $("#area_popup").popover('show');
+        });
+    }
+    if (decision_description.value === '') {
+        answers[5] = 0;
+    } else {
+        answers[5] = 1;
+    }
+    if (answers[5] === 0) {
+        $(document).ready(function(){
+            $("#decision_popup").popover('show');
+        });
+    }
+    if (answers.includes(0, 0) === true) {
+        let index = answers.findIndex(answers => answers === 0) + 1;
+        let first_zero_id = 'Q' + String(index) + '_title';
+        var first_zero_q = document.getElementById(first_zero_id);
+        first_zero_q.scrollIntoView();
+    }
+    var x = answers[0] + answers[1] + answers[2] + answers[3] + answers[4] + answers[5];
+    if (x === 6) {
+        document.getElementById("form").submit();
+    }
+}
+
+</script>
+{{ endblock }}

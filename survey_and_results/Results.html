@@ -1,0 +1,183 @@
+{{ block title }}
+Results
+{{ endblock }}
+
+{{ block scripts }}
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    let finalcanvas;
+
+    window.onload = function () {
+        highlight_choices()
+        html2canvas(document.body).then(function(canvas){
+        finalcanvas=canvas
+        },);}
+
+    document.getElementById('submit_email').onclick = function(){
+        liveSend({'send_email':1, 'attachment':finalcanvas.toDataURL(),'email_address':String(js_vars.email_address),'name':String(js_vars.name)})
+    }
+    function liveRecv(data) {
+        window.alert(data)
+    }
+function highlight_choices() {
+    let choices_1 = js_vars.choices[0];
+    let op_choices_1 = js_vars.opponent_choices[0];
+    if (choices_1 === 1) {
+        document.getElementById("top").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+        if (op_choices_1 === 1) {
+            document.getElementById("left").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+            document.querySelector(".top.left").style.backgroundColor = "rgba(128, 191, 255, 1)";
+            document.querySelector(".top.right").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+            document.querySelector(".bottom.left").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+        } else {
+            document.getElementById("right").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+            document.querySelector(".top.left").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+            document.querySelector(".top.right").style.backgroundColor = "rgba(128, 191, 255, 0.1)";
+            document.querySelector(".bottom.right").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+        }
+    } else {
+        document.getElementById("bottom").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+        if (op_choices_1 === 1) {
+            document.getElementById("left").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+            document.querySelector(".top.left").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+            document.querySelector(".bottom.right").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+            document.querySelector(".bottom.left").style.backgroundColor = "rgba(128, 191, 255, 1)";
+        } else {
+            document.getElementById("right").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+            document.querySelector(".top.right").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+            document.querySelector(".bottom.right").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+            document.querySelector(".bottom.left").style.backgroundColor = "rgba(128, 191, 255, 1)";
+        }
+    }
+}
+</script>
+
+{{ endblock }}
+
+{{ block content }}
+<style>
+table, th, td {
+  border: none;
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+  font-size: 20px;
+}
+th, td {
+  padding: 0;
+  font-weight: bold;
+}
+.payoff {
+  border: 1px solid black
+}
+
+.rectangle {
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 1px 2px 1px 2px;
+  width: 100px;
+  height: 90px;
+  line-height: 90px;
+  cursor: default;
+  background-color: rgba(128, 191, 255, 0.2);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: blue;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.op_rectangle {
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 2px 1px 2px 1px;
+  width: 160px;
+  height: 60px;
+  line-height: 60px;
+  cursor: default;
+  background-color: rgba(0, 0, 0, 0.15);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: black;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+</style>
+<body onload="highlight_choices()">
+<div>
+    <p>
+        Thank you for participating in an ELFE Experiment!
+    </p>
+    <p>
+        Round {{ paying_round.0 }} was randomly selected by the computer for payment. In this round you chose {{ if choices.0 == 1 }} Top
+        {{ elif choices.0 == 0 }} Bottom {{ endif }}, and your opponent chose {{ if opponent_choices.0 == 1 }} Top
+        {{ elif opponent_choices.0 == 0 }} Bottom {{ endif }}. The result in this round is shown below.  Your payoff from this
+        game is £{{ payoff }}.  In addition, you have earned the completion payment of £{{ participation_fee }}.
+        So, your total earnings will be £{{ payoff_total }}.
+    </p>
+</div>
+<div>
+    <h5 style="text-align: center">Round {{ paying_round.0 }}</h5>
+    <table>
+        <tr style="height: 60px">  <!-- Top Row -->
+            <th style="width: 100px"></th>  <!-- Top left Corner -->
+            <th style="width: 160px;"><label class="op_rectangle" id="left">Left</label></th>  <!-- Left Choice -->
+            <th style="width: 160px;"><label class="op_rectangle" id="right">Right</label></th>  <!-- Right Choice-->
+        </tr>
+        <tr style="height: 90px">  <!-- Middle Row -->
+            <td style="width: 100px">
+                <span style="color: blue; font-weight: bold"><label class="rectangle" id="top">Top</label></span>
+            </td>   <!-- Top Choice -->
+            <th class="payoff top left"><span style="color: blue">{{ payoffs_1.0 }}</span>, {{ payoffs_1.0 }}</th>  <!-- Top-Left Payoffs -->
+            <th class="payoff top right"><span style="color: blue">{{ payoffs_1.1 }}</span>, {{ payoffs_1.2 }}</th>  <!-- Top-Right Payoffs -->
+        </tr>
+        <tr style="height: 90px">  <!-- Bottom Row -->
+            <td style="width: 100px">
+                <span style="color: blue; font-weight: bold"><label class="rectangle" id="bottom">Bottom</label></span>
+            </td>   <!-- Bottom Choice -->
+            <th class="payoff bottom left"><span style="color: blue">{{ payoffs_1.2 }}</span>, {{ payoffs_1.1 }}</th>  <!-- Bottom-Left Payoffs -->
+            <th class="payoff bottom right"><span style="color: blue">{{ payoffs_1.3 }}</span>, {{ payoffs_1.3 }}</th>  <!-- Bottom-Right Payoffs -->
+        </tr>
+    </table>
+
+
+</div>
+<br>
+
+<div>
+    <p>
+        You will receive payment via Wise. We do our best to deliver payments in a timely fashion, but please
+        allow up to 48 hours to receive your payment. If your payment does not arrive within 48 hours, please contact
+        <span style="color:blue; text-decoration: underline">ucl.elfe.lab@gmail.com.</span>
+    </p>
+    <p>
+        If you click the button below you will receive a screenshot of this page as an attachment to an email sent to
+        the address you provided to receive your payment. If you do click the button, please wait for a message to appear
+        on the screen, showing that the email was successfully sent.
+    </p>
+
+    <button type="button" id="submit_email" class="btn btn-secondary">Send me email with payment details </button><br>
+
+<p>Please click the Ok button to finish the experiment. </p>
+<button id="submit" class="btn btn-primary">Ok</button>
+</div>
+
+
+
+</body>
+{{ endblock }}
+
+

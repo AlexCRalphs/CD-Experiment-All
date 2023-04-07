@@ -1,0 +1,323 @@
+{{ block title }}
+Round {{ player.round_number }}: Choice Screen
+{{ endblock }}
+{{ block content }}
+<style>
+table, th, td {
+  border: none;
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+  font-size: 20px;
+}
+th, td {
+  padding: 0;
+  font-weight: bold;
+}
+.payoff {
+  border: 1px solid black;
+  padding: 0;
+}
+.btn-secondary {
+  background-color: silver;
+  border: 1px solid silver;
+  color: black;
+}
+/* The container */
+.rectangle {
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 1px 2px 1px 2px;
+  width: 100px;
+  height: 90px;
+  line-height: 90px;
+  cursor: pointer;
+  background-color: rgba(128, 191, 255, 0.2);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: blue;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.op_rectangle {
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 2px 1px 2px 1px;
+  width: 160px;
+  height: 60px;
+  line-height: 60px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.15);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: black;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+/* Hide the browser's default radio button */
+.rectangle input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.op_rectangle input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  padding: 0;
+  top: 0;
+  left: 0;
+  height: 90px;
+  width: 100px;
+  background-color: rgba(128, 191, 255, 0.2);
+  opacity: 0;
+}
+
+.op_checkmark {
+  position: absolute;
+  padding: 0;
+  top: 0;
+  left: 0;
+  height: 60px;
+  width: 160px;
+  background-color: rgba(128, 191, 255, 0.2);
+  opacity: 0;
+}
+
+/* On mouse-over, add a light background color */
+.rectangle:hover input ~ .checkmark {
+  background-color: rgba(128, 191, 255, 0.5);
+  opacity: 0.5;
+  transition-duration: 0.2s;
+}
+
+.op_rectangle:hover input ~ .op_checkmark {
+  background-color: rgba(0, 0, 0, 0.1);
+  opacity: 0.5;
+  transition-duration: 0.2s;
+}
+
+/* When the radio button is checked, add a dark background */
+.rectangle input:checked ~ .checkmark {
+  background-color: rgba(128, 191, 255, 0.5);
+  opacity: 1;
+}
+
+.op_rectangle input:checked ~ .op_checkmark {
+  background-color: rgba(0, 0, 0, 0.15);
+  opacity: 1;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.op_checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.rectangle input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.op_rectangle input:checked ~ .op_checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.rectangle .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 0;
+	height: 0;
+	border-radius: 50%;
+	background: rgba(128, 191, 255, 0);
+}
+
+.op_rectangle .op_checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 0;
+	height: 0;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0);
+}
+</style>
+<div style="height:450px">
+    <br>
+<div class="form-group required" id="decision_table">  <!-- table for payoff matrix -->
+    <table>
+        <tr>  <!-- Top Row -->
+            <th style="width: 100px; height: 60px; padding: 0"></th>  <!-- Top left Corner -->
+            <td style="width: 160px; height: 60px; padding: 0"> <!-- Left Choice -->
+                <label class="op_rectangle">Left
+                    <input name="op_choice" type="radio" id="left_column">
+                    <span class="op_checkmark">Left</span>
+                </label>
+            </td>
+            <td style="width: 160px; height: 60px; padding: 0"> <!-- Right Choice -->
+                <label class="op_rectangle">Right
+                    <input name="op_choice" type="radio" id="right_column">
+                    <span class="op_checkmark">Right</span>
+                </label>
+            </td>
+        </tr>
+        <tr>  <!-- Middle Row -->
+            <td style="width: 100px; padding: 0">
+                <label class="rectangle">Top
+                    <input name="choice" type="radio" value="True" id="top_row">
+                    <span class="checkmark">Top</span>
+                </label>
+            </td>  <!-- Top Choice -->
+            <th class="payoff top left"><span style="color: blue">{{ payoffs.0 }}</span>, {{ payoffs.0 }}</th>  <!-- Top-Left Payoffs -->
+            <th class="payoff top right"><span style="color: blue">{{ payoffs.1 }}</span>, {{ payoffs.2 }}</th>  <!-- Top-Right Payoffs -->
+        </tr>
+        <tr>  <!-- Bottom Row -->
+            <td style="width: 100px; padding: 0">
+                <label class="rectangle">Bottom
+                    <input name="choice" type="radio" value="False" id="bottom_row">
+                    <span class="checkmark">Bottom</span>
+                </label>
+            </td>  <!-- Bottom Choice -->
+            <th class="payoff bottom left"><span style="color: blue">{{ payoffs.2 }}</span>, {{ payoffs.1 }}</th>  <!-- Bottom-Left Payoffs -->
+            <th class="payoff bottom right"><span style="color: blue">{{ payoffs.3 }}</span>, {{ payoffs.3 }}</th>  <!-- Bottom-Right Payoffs -->
+        </tr>
+    </table>
+</div>
+    <br>
+<div>
+    <p id="none_chosen" style="text-align: center">Please choose a row.</p>
+    <p id="chosen_top" style="text-align: center; display: none">You have chosen <span style="color: red"><strong>Top</strong></span>.</p>
+    <p id="chosen_bottom" style="text-align: center; display: none">You have chosen <span style="color: red"><strong>Bottom</strong></span>.</p>
+</div>
+
+<div>
+    <p style="text-align: center; display: none" id="confirm">Please confirm your choices below.
+        (The 'Confirm and Continue' button will appear after {{time}} seconds.)<br><br>
+    <button class="otree-btn-next btn btn-primary next-button otree-next-button" id="ok_button" style="display: block; margin:auto; visibility: hidden">Confirm and Continue</button>
+    </p>
+</div>
+</div>
+<div>
+<p>
+<button class="otree-btn-next btn btn-secondary next-button otree-next-button" data-toggle="button" style="display: block; margin: auto" onclick="open_instructions()" type="button">Part 1 Instructions</button>
+</p>
+</div>
+<div style="display: none" id="instructions">{{ include C.INSTRUCTIONS_FILE }}</div>
+
+<script>
+time = 1000 * js_vars.time;
+setTimeout(function () {document.getElementById("ok_button").style.visibility = "visible";}, time);
+
+function highlight_rows_and_columns() {
+    let top_button = document.getElementById("top_row");
+    let bottom_button = document.getElementById("bottom_row");
+    let left = document.querySelectorAll(".left");
+    let right = document.querySelectorAll(".right");
+    let left_button = document.getElementById("left_column");
+    let right_button = document.getElementById("right_column");
+    let none_chosen = document.getElementById("none_chosen");
+    let chosen_top = document.getElementById("chosen_top");
+    let chosen_bottom = document.getElementById("chosen_bottom");
+    let confirm = document.getElementById("confirm");
+
+    if (top_button.checked === true) {
+        chosen_top.style.display = "block";
+        chosen_bottom.style.display = "none";
+        none_chosen.style.display = "none";
+        confirm.style.display = "block";
+    }
+    if (bottom_button.checked === true) {
+        chosen_top.style.display = "none";
+        chosen_bottom.style.display = "block";
+        none_chosen.style.display = "none";
+        confirm.style.display = "block";
+    }
+
+    if (left_button.checked === true) {
+        if (top_button.checked === true) {
+            left[0].style.backgroundColor = "rgba(128, 191, 255, 1)";
+        } else {
+            left[0].style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+        }
+        if (bottom_button.checked === true) {
+            left[1].style.backgroundColor = "rgba(128, 191, 255, 1)";
+        } else {
+            left[1].style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+        }
+    } else {
+        if (top_button.checked === true) {
+            left[0].style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+        } else {
+            left[0].style.backgroundColor = "#ffffff";
+        }
+        if (bottom_button.checked === true) {
+            left[1].style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+        } else {
+            left[1].style.backgroundColor = "#ffffff";
+        }
+    }
+    if (right_button.checked === true) {
+        if (top_button.checked === true) {
+            right[0].style.backgroundColor = "rgba(128, 191, 255, 1)";
+        } else {
+            right[0].style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+        }
+        if (bottom_button.checked === true) {
+            right[1].style.backgroundColor = "rgba(128, 191, 255, 1)";
+        } else {
+            right[1].style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+        }
+    } else {
+        if (top_button.checked === true) {
+            right[0].style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+        } else {
+            right[0].style.backgroundColor = "#ffffff";
+        }
+        if (bottom_button.checked === true) {
+            right[1].style.backgroundColor = "rgba(128, 191, 255, 0.5)";
+        } else {
+            right[1].style.backgroundColor = "#ffffff";
+        }
+    }
+}
+
+var top = document.getElementById("top_row");
+var bottom = document.getElementById("bottom_row");
+var left = document.getElementById("left_column");
+var right = document.getElementById("right_column");
+top.addEventListener("click", highlight_rows_and_columns, false);
+bottom.addEventListener("click", highlight_rows_and_columns, false);
+left.addEventListener("click", highlight_rows_and_columns, false);
+right.addEventListener("click", highlight_rows_and_columns, false);
+
+function open_instructions() {
+    let x = document.getElementById("instructions");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+</script>
+{{ endblock }}

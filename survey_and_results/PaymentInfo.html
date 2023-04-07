@@ -1,0 +1,162 @@
+{{ block title }}
+How Can We Pay You?
+{{ endblock }}
+
+{{ block content }}
+<style>
+table, th, td {
+  border: none;
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+  height: auto;
+}
+td {
+    padding: 2px 2px 2px 3px;
+}
+p {
+  margin-bottom: 0.5rem;
+}
+input[type=text], input[type=email], textarea {
+  border: 1px solid grey;
+  outline: none;
+  padding: 2px;
+
+}
+input[type=email]:hover, textarea:hover {
+  border: 1px solid grey;
+  box-shadow: 0 0 2px 2px #2196F3;
+  outline: none;
+}
+input[type=text]:enabled:hover {
+  border: 1px solid grey;
+  box-shadow: 0 0 2px 2px #2196F3;
+  outline: none;
+}
+input[type=text]:focus, input[type=email]:hover, textarea:focus {
+  border: 1px solid grey;
+  box-shadow: 0 0 2px 2px #2196F3;
+  outline: none;
+}
+label {
+    margin: auto auto auto 5px;
+}
+.toggle {
+      width:13px;
+      height:13px;
+      border-radius:50%;
+      appearance:none;
+      outline:none;
+      border:1px solid grey;
+
+    }
+    .toggle:hover {
+      box-shadow: 0 0 2px 2px #2196F3;
+    }
+    .toggle:checked {
+      box-shadow: 0 0 2px 2px #2196F3;
+	  width:12px;
+      height:12px;
+      border-radius:50%;
+      border:2px solid white;
+      background-color: grey;
+
+    }
+</style>
+
+    <p>To pay you, we will need the following information:</p><br>
+    <p>Email Address to Receive Payment:</p>
+    <div id="email_popup" style="width: 180px" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Fill out this field">
+        <input type="email" name="email" id="email" onclick="$('#email_popup').popover('hide')">
+        <label for="email"></label>
+    </div>
+<br>
+<div>
+    <p>Country of Bank Account:</p>
+<table style="margin-left: 0">
+    <tr>
+        <td id="country_popup" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Select one of these options">
+            <input class="toggle" type="radio" name="country" id="UK" value="UK" onclick="$('#country_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="UK">UK</label>
+        </td>
+        <th></th>
+    </tr>
+
+    <tr>
+        <td>
+            <input class="toggle" type="radio" name="country" id="other" onclick="$('#country_popup').popover('hide')">
+        </td>
+        <td style="text-align: left">
+            <label for="other">Other:</label>
+        </td>
+        <td id="other_country_popup" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Fill out this field">
+            <input type="text" name="country" id="other_country" disabled onclick="$('#other_country_popup').popover('hide')">
+            <label for="other_country"></label>
+        </td>
+    </tr>
+
+</table>
+<br>
+</div>
+
+    <p>Please click “Next” when you are ready to submit your answers.</p>
+
+<button class="otree-btn-next btn btn-primary next-button otree-next-button" type="button" id="next_button" style="margin:auto" onclick="recordAnswers()">Next</button>
+
+<script>
+function enable_country() {
+    document.getElementById("other_country").disabled = false;
+}
+var other = document.getElementById("other");
+other.addEventListener("click", enable_country, false);
+
+function disable_country() {
+    document.getElementById("other_country").disabled = true;
+}
+function clear_other() {
+    document.getElementById("other_country").value = '';
+}
+var UK = document.getElementById("UK");
+UK.addEventListener("click", disable_country, false);
+UK.addEventListener("click", clear_other, false);
+
+function recordAnswers() {
+    let answers = [0, 0];
+    let email = document.getElementById("email");
+    let country = document.getElementsByName("country");
+    if (email.value === '') {
+        answers[0] = 0;
+        $(document).ready(function(){
+            $("#email_popup").popover('show');
+        });
+    } else {
+        answers[0] = 1;
+    }
+    if (country[0].checked === true) {
+        answers[1] = 1;
+    }
+    if (country[1].checked === true) {
+        if (country[2].value === '') {
+            answers[1] = 0;
+            $(document).ready(function(){
+                $("#other_country_popup").popover('show');
+            });
+        } else {
+            answers[1] = 1;
+        }
+    }
+    if (country[0].checked === false && country[1].checked === false) {
+        $(document).ready(function(){
+            $("#country_popup").popover('show');
+        });
+    }
+    x = answers[0] + answers[1];
+    if (x === 2) {
+        document.getElementById("form").submit();
+    }
+}
+</script>
+
+{{ endblock }}

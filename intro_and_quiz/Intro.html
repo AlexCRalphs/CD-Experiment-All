@@ -1,0 +1,33 @@
+{{ block title }}
+    Welcome!
+{{ endblock }}
+{{ block content }}
+
+<div>
+    <p>Welcome to an experiment at ELFE. </p>
+    <p>You are about to participate in a study of decision-making. At the conclusion of the experiment, you will be
+        paid for your participation. You will receive payment via a bank transfer. The amount of money you will receive
+        depends on your decisions.
+    </p>
+    <p>In order to use your data for research, you will need to complete the entire experiment. However, your
+        participation is voluntary. You may choose to stop participating at any time.
+    </p>
+    <p>If you do choose to complete the experiment, you will earn a payment depending on your choices---which range from
+        {{min_payment}}-{{max_payment}}. We ask that you keep yourself free of
+        distractions during the experiment. Please turn off your mobile phones for the duration of the experiment.
+        In addition, please do not communicate with anyone before you complete the experiment.
+    </p>
+    <p>If you have any questions or technical issues, please raise your hand and the experimenters will do their best to respond to any
+        questions and fix any issues you are experiencing.
+    </p>
+    <p>Next, we will provide instructions explaining how the experiment works and how you will be paid. As a reminder,
+        you will never be lied to during this or any experiment at ELFE. So, in particular, the instructions explaining
+        how the experiment works and how you are paid are indeed true.
+    </p>
+    <p>When you are ready, please click "Next" to go on. </p>
+
+</div>
+
+    {{ next_button }}
+
+{{ endblock }}

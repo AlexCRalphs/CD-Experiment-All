@@ -1,0 +1,29 @@
+
+        {{ block title }}
+        Admin Interface   
+        {{ endblock }}
+        {{ block content }}
+ <p>    Values for this session:</p>
+        <ul>
+            <li>
+                total number of players playing: {{ num_players_in_session }}
+            </li>
+            <li>
+                number of players waiting for survey: {{ num_players_waiting_for_survey }}
+            </li>
+            <li>
+                number of players waiting to start: {{ num_players_waiting_to_start }}
+            </li>
+            <li>
+                number of players waiting to be paid: {{ num_waiting_for_payoff }}
+            </li>
+        </ul>
+
+
+        {{ formfield player.force_start label="Force start game for all players:" }}
+        {{ formfield player.force_survey label="Force show survey:" }}
+        {{ formfield player.force_payoff label="Force show payoff:" }}
+        {{ formfield player.force_finish label="Force finish experiment" }}
+        <p> Click on Next button to submit actions </p>
+        {{ next_button }}
+        {{ endblock }}
