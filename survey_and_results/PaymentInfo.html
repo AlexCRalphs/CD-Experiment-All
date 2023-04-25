@@ -71,6 +71,12 @@ label {
         <label for="email"></label>
     </div>
 <br>
+<p>Full Name for Payment:</p>
+<div id="participant_name_popup" style="width: 180px" data-toggle="popover" data-placement="top" data-trigger="manual" data-content="Fill out this field">
+    <input name="participant_name" id="participant_name" onclick="$('#participant_name_popup').popover('hide')">
+    <label for="participant_name"></label>
+</div>
+<br>
 <div>
     <p>Country of Bank Account:</p>
 <table style="margin-left: 0">
@@ -125,6 +131,7 @@ UK.addEventListener("click", clear_other, false);
 function recordAnswers() {
     let answers = [0, 0];
     let email = document.getElementById("email");
+    let participant_name = document.getElementById("participant_name")
     let country = document.getElementsByName("country");
     if (email.value === '') {
         answers[0] = 0;
@@ -134,17 +141,25 @@ function recordAnswers() {
     } else {
         answers[0] = 1;
     }
-    if (country[0].checked === true) {
+    if (participant_name.value === '') {
+        answers[1] = 0;
+        $(document).ready(function(){
+            $('#participant_name_popup').popover('show');
+        });
+    } else {
         answers[1] = 1;
+    }
+    if (country[0].checked === true) {
+        answers[2] = 1;
     }
     if (country[1].checked === true) {
         if (country[2].value === '') {
-            answers[1] = 0;
+            answers[2] = 0;
             $(document).ready(function(){
                 $("#other_country_popup").popover('show');
             });
         } else {
-            answers[1] = 1;
+            answers[2] = 1;
         }
     }
     if (country[0].checked === false && country[1].checked === false) {
@@ -152,8 +167,8 @@ function recordAnswers() {
             $("#country_popup").popover('show');
         });
     }
-    x = answers[0] + answers[1];
-    if (x === 2) {
+    x = answers[0] + answers[1] + answers[2];
+    if (x === 3) {
         document.getElementById("form").submit();
     }
 }

@@ -42,22 +42,14 @@ class Player(BasePlayer):
 
 # FUNCTIONS
 
-def set_player_id(player: Player):
-    player.participant_playing = True
-    player.player_id = player.participant.vars['player_id']
-
 
 # PAGES
 class Intro(Page):
     @staticmethod
     def vars_for_template(player):
         return dict(participation_fee=player.session.config['participation_fee'],
-                    max_payment=cu(34) + player.session.config['quiz_payment'],
-                    min_payment=cu(5))
-
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        set_player_id(player)
+                    max_payment=player.session.vars['max_payment'],
+                    min_payment=player.session.vars['min_payment'])
 
 
 class Instructions1(Page):

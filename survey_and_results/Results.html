@@ -28,9 +28,9 @@ Results
 function highlight_choices() {
     let choices_1 = js_vars.choices[0];
     let op_choices_1 = js_vars.opponent_choices[0];
-    if (choices_1 === 1) {
-        document.getElementById("top").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
-        if (op_choices_1 === 1) {
+    if (choices_1 === '1') {
+        document.getElementById("top").style.backgroundColor = "rgba(128, 191, 255, 0.6)";
+        if (op_choices_1 === '1') {
             document.getElementById("left").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
             document.querySelector(".top.left").style.backgroundColor = "rgba(128, 191, 255, 1)";
             document.querySelector(".top.right").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
@@ -38,12 +38,12 @@ function highlight_choices() {
         } else {
             document.getElementById("right").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
             document.querySelector(".top.left").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
-            document.querySelector(".top.right").style.backgroundColor = "rgba(128, 191, 255, 0.1)";
+            document.querySelector(".top.right").style.backgroundColor = "rgba(128, 191, 255, 1)";
             document.querySelector(".bottom.right").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
         }
     } else {
-        document.getElementById("bottom").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
-        if (op_choices_1 === 1) {
+        document.getElementById("bottom").style.backgroundColor = "rgba(128, 191, 255, 0.6)";
+        if (op_choices_1 === '1') {
             document.getElementById("left").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
             document.querySelector(".top.left").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
             document.querySelector(".bottom.right").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
@@ -51,8 +51,8 @@ function highlight_choices() {
         } else {
             document.getElementById("right").style.backgroundColor = "rgba(0, 0, 0, 0.3)";
             document.querySelector(".top.right").style.backgroundColor = "rgba(0, 0, 0, 0.2)";
-            document.querySelector(".bottom.right").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
-            document.querySelector(".bottom.left").style.backgroundColor = "rgba(128, 191, 255, 1)";
+            document.querySelector(".bottom.right").style.backgroundColor = "rgba(128, 191, 255, 1)";
+            document.querySelector(".bottom.left").style.backgroundColor = "rgba(128, 191, 255, 0.5)";
         }
     }
 }
@@ -122,10 +122,10 @@ th, td {
         Thank you for participating in an ELFE Experiment!
     </p>
     <p>
-        Round {{ paying_round.0 }} was randomly selected by the computer for payment. In this round you chose {{ if choices.0 == 1 }} Top
-        {{ elif choices.0 == 0 }} Bottom {{ endif }}, and your opponent chose {{ if opponent_choices.0 == 1 }} Top
-        {{ elif opponent_choices.0 == 0 }} Bottom {{ endif }}. The result in this round is shown below.  Your payoff from this
-        game is £{{ payoff }}.  In addition, you have earned the completion payment of £{{ participation_fee }}.
+        Round {{ paying_round.0 }} was randomly selected by the computer for payment. In this round you chose {{ if choices.0 == '1' }} Top{{ elif choices.0 == '0' }} Bottom{{ endif }},
+        and your opponent chose {{ if opponent_choices.0 == '1' }} Left{{ elif opponent_choices.0 == '0' }} Right{{ endif }}.
+        The result in this round is shown below.  Your payoff from this game is {{ payoff }}.
+        In addition, you have earned the completion payment of £{{ participation_fee }}.
         So, your total earnings will be £{{ payoff_total }}.
     </p>
 </div>
@@ -160,8 +160,8 @@ th, td {
 <div>
     <p>
         You will receive payment via Wise. We do our best to deliver payments in a timely fashion, but please
-        allow up to 48 hours to receive your payment. If your payment does not arrive within 48 hours, please contact
-        <span style="color:blue; text-decoration: underline">ucl.elfe.lab@gmail.com.</span>
+        allow up to 12 hours to receive your payment. If your payment does not arrive within 12 hours, please contact
+        <span style="color:blue; text-decoration: underline">alexanderralphs@gmail.com.</span>
     </p>
     <p>
         If you click the button below you will receive a screenshot of this page as an attachment to an email sent to

@@ -43,6 +43,7 @@ class Player(BasePlayer):
                                        'Physics', 'PolSci', 'Psych', 'Other'], widget=widgets.RadioSelect, blank=True)
     decision_description = models.LongStringField(blank=True)
     email = models.StringField(blank=True)
+    participant_name = models.StringField(blank=True)
     country = models.StringField(blank=True)
 
     finished_late = models.IntegerField(initial=0)
@@ -75,7 +76,7 @@ class Survey(Page):
 
 class PaymentInfo(Page):
     form_model = 'player'
-    form_fields = ['email', 'country']
+    form_fields = ['email', 'participant_name', 'country']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -116,6 +117,7 @@ class Results(Page):
 
     @staticmethod
     def live_method(player, data):
+        import pandas as pd
         if data['send_email'] == 1:
             attachment_name = "payment_info.png"
             send_to_email = "{}".format(data["email_address"])
@@ -173,10 +175,10 @@ class Results(Page):
               </body>
             </html>
             """
-            email_details = open('email_details.txt', 'r')
-            host_email = email_details.readline(1)
-            username = email_details.readline(2)
-            password = email_details.readline(3)
+            email_details = pd.read_csv('email_details.csv', usecols=['Host_email', 'username', 'password'])
+            host_email = email_details.loc[0, 'Host_email']
+            username = email_details.loc[0, 'username']
+            password = email_details.loc[0, 'password']
             send_mail(host_email, [send_to_email],
                       "Your payment details - ELFE experiment", html,
                       files=[attachment_name], server="smtp.gmail.com",

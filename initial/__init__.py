@@ -43,40 +43,6 @@ class Player(BasePlayer):
 # FUNCTIONS
 
 
-def set_player_ids(subsession: Subsession):
-    import random
-    secret_admin_participant_label = subsession.session.config['secret_admin_participant_label']
-    subsession.session.vars['id_of_admin'] = float('inf')
-    for p in subsession.get_players():
-        if p.participant.label == secret_admin_participant_label:
-            subsession.session.vars['id_of_admin'] = p.id_in_group
-    if subsession.session.vars['id_of_admin'] != float('inf'):
-        number_of_players = subsession.session.num_participants - 1
-    else:
-        number_of_players = subsession.session.num_participants
-    player_ids = [*range(1, number_of_players + 1, 1)]
-    random.shuffle(player_ids)
-    print(player_ids)
-    subsession.session.vars['player_ids'] = player_ids
-    for p in subsession.get_players():
-        set_player_id(p)
-
-
-def set_player_id(player: Player):
-    player_ids = player.session.vars['player_ids']
-    id_in_group = player.id_in_group
-    id_of_admin = player.session.vars['id_of_admin']
-    if id_in_group < id_of_admin:
-        player.participant.vars['player_id'] = player_ids[id_in_group-1]
-        player.player_id = player_ids[id_in_group-1]
-    elif id_in_group == id_of_admin:
-        player.participant.vars['player_id'] = 0
-        player.player_id = 0
-    else:
-        player.participant.vars['player_id'] = player_ids[id_in_group - 2]
-        player.player_id = player_ids[id_in_group - 2]
-
-
 # PAGES
 class AdminPage(Page):
     form_model = 'player'
@@ -155,8 +121,6 @@ class Before_experiment(Page):
     def before_next_page(player, timeout_happened):
         player.participant.vars['status'] = 'playing'
         player.participant_playing = True
-        set_player_ids(player.subsession)
-
 
     @staticmethod
     def js_vars(player):
