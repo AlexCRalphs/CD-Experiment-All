@@ -4,9 +4,8 @@ SESSION_CONFIGS = [
     dict(
         name='anti_co_ordination_game',
         participation_fee=10,
-        num_demo_participants=5,
+        num_demo_participants=10,
         app_sequence=['initial', 'intro_and_quiz', 'games', 'survey_and_results'],
-        quiz_payment=0,
         number_of_games=40,
         gap_between_alternative_games=3,
         instructions_time_sec_1=60,
@@ -32,11 +31,11 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['expiry', 'status', 'quiz_payoff', 'quiz_number_correct', 'quiz_incorrect_count', 'quiz_finished',
+PARTICIPANT_FIELDS = ['expiry', 'status', 'quiz_number_correct', 'quiz_incorrect_count', 'quiz_finished',
                       'paying_round', 'player_id', 'game_payoff', 'payment_payoffs', 'choices', 'AC_payoffs',
-                      'SH_payoffs', 'ac_games', 'sh_games', 'game_ids', 'opponent_payment_choices']
+                      'SH_payoffs', 'ac_games', 'sh_games', 'games_finished', 'game_ids', 'opponent_payment_choices']
 SESSION_FIELDS = ['start_all_together_admin', 'show_payoff', 'show_survey', 'finish_experiment', 'player_ids',
-                  'id_of_admin']
+                  'ids_excluded', 'ids_not_excluded', 'id_of_admin']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans

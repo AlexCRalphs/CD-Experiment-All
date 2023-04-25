@@ -33,9 +33,11 @@ class Player(BasePlayer):
     paying_round = models.StringField()
     choices = models.StringField()
     opponent_choices = models.StringField()
+    opponent_id_in_session = models.IntegerField()
     opponent_payment_choices = models.StringField()
     payment_payoffs = models.LongStringField()
     finished_late = models.IntegerField(initial=0)
+    games_finished = models.BooleanField()
 
 
 # FUNCTIONS
@@ -45,61 +47,91 @@ def creating_session(subsession: Subsession):
     # import csv
     import pandas as pd
     number_of_games = subsession.session.config['number_of_games']
+    dict_ac = {}
+    dict_sh = {}
+    filename_ac = "Game_Payoffs_AC.csv"
+    filename_sh = "Game_Payoffs_SH.csv"
+    payoff_index = ["name", "T", "R", "S", "P"]
+    ac_games = pd.read_csv(filename_ac, usecols=payoff_index)
+    sh_games = pd.read_csv(filename_sh, usecols=payoff_index)
+    ac = []
+    sh = []
+    for i in range(30):
+        ac.append(dict(x1=int(ac_games.loc[i, 'R']), x2=int(ac_games.loc[i, 'S']), x3=int(ac_games.loc[i, 'T']),
+                       x4=int(ac_games.loc[i, 'P'])))
+        dict_ac[ac_games.loc[i, 'name']] = ac[i]
+    for i in range(10):
+        sh.append(dict(x1=int(sh_games.loc[i, 'R']), x2=int(sh_games.loc[i, 'S']), x3=int(sh_games.loc[i, 'T']),
+                       x4=int(sh_games.loc[i, 'P'])))
+        dict_sh[sh_games.loc[i, 'name']] = sh[i]
+    subsession.session.vars['min_payment'] = ac_games['P'].min()
+    subsession.session.vars['max_payment'] = ac_games['T'].max()
+    gap = subsession.session.config['gap_between_alternative_games']
+    ac_rounds = list(range(1, number_of_games + 1))
+    sh_rounds = list(range(gap + 1, number_of_games + 1, gap + 1))
+    for i in range(len(sh_rounds)):
+        ac_rounds.remove(sh_rounds[i])
     for p in subsession.get_players():
-        dict_ac = {}
-        dict_sh = {}
-        filename_ac = "Game_Payoffs_AC.csv"
-        filename_sh = "Game_Payoffs_SH.csv"
-        payoff_index = ["name", "T", "R", "S", "P"]
-        ac_games = pd.read_csv(filename_ac, usecols=payoff_index)
-        sh_games = pd.read_csv(filename_sh, usecols=payoff_index)
-        ac = []
-        sh = []
-        for i in range(30):
-            ac.append(dict(x1=int(ac_games.loc[i, 'R']), x2=int(ac_games.loc[i, 'S']), x3=int(ac_games.loc[i, 'T']),
-                           x4=int(ac_games.loc[i, 'P'])))
-            dict_ac[ac_games.loc[i, 'name']] = ac[i]
-        for i in range(10):
-            sh.append(dict(x1=int(sh_games.loc[i, 'R']), x2=int(sh_games.loc[i, 'S']), x3=int(sh_games.loc[i, 'T']),
-                           x4=int(sh_games.loc[i, 'P'])))
-            dict_sh[sh_games.loc[i, 'name']] = sh[i]
         p.participant.vars['AC_payoffs'] = dict_ac
         p.participant.vars['SH_payoffs'] = dict_sh
-
-
-        # with open(filename_ac, 'r') as data:
-        #    reader = csv.DictReader(data, dialect='excel')
-        #    keys = []
-        #    ac = []
-        #    for row in reader:
-        #        line = dict(row)
-        #        keys.append(line['name'])
-        #        ac.append(dict(x1=int(line['R']), x2=int(line['S']), x3=int(line['T']), x4=int(line['P'])))
-        #    for i in range(len(keys)):
-        #        dict_ac[keys[i]] = ac[i]
-        #    p.participant.vars['AC_payoffs'] = dict_ac
-        # with open(filename_sh, 'r') as data:
-        #    reader = csv.DictReader(data, dialect='excel')
-        #    keys = []
-        #    sh = []
-        #    for row in reader:
-        #        line = dict(row)
-        #        keys.append(line['name'])
-        #        sh.append(dict(x1=int(line['R']), x2=int(line['S']), x3=int(line['T']), x4=int(line['P'])))
-        #    for i in range(len(keys)):
-        #        dict_sh[keys[i]] = sh[i]
-        #    p.participant.vars['SH_payoffs'] = dict_sh
-
         if subsession.round_number == 1:
-            paying_round = random.sample(range(1, number_of_games + 1), k=1)
+            paying_round = random.sample(ac_rounds, k=1)
             p.participant.vars['paying_round'] = paying_round
+            p.participant.vars['games_finished'] = False
+
+
+def set_ids(subsession: Subsession):
+    import random
+    secret_admin_participant_label = subsession.session.config['secret_admin_participant_label']
+    subsession.session.vars['id_of_admin'] = float('inf')
+    number_players_finished_games = 0
+    for p in subsession.get_players():
+        if p.participant.label == secret_admin_participant_label:
+            subsession.session.vars['id_of_admin'] = p.id_in_group
+        elif p.participant.vars['games_finished'] is True:
+            number_players_finished_games = number_players_finished_games + 1
+    player_ids = [*range(1, number_players_finished_games + 1, 1)]
+    random.shuffle(player_ids)
+    subsession.session.vars['player_ids'] = player_ids
+    id_of_admin = subsession.session.vars['id_of_admin']
+    ids_excluded = []
+    if id_of_admin != float('inf'):
+        ids_excluded.append(id_of_admin)
+    for p in subsession.get_players():
+        if p.participant.vars['games_finished'] is False and p.participant.label != secret_admin_participant_label:
+            ids_excluded.append(p.id_in_group)
+    subsession.session.vars['ids_excluded'] = ids_excluded
+    ids_not_excluded = []
+    number_of_players = subsession.session.num_participants
+    for i in range(1, number_of_players + 1):
+        if i not in ids_excluded:
+            ids_not_excluded.append(i)
+    subsession.session.vars['ids_not_excluded'] = ids_not_excluded
+    players_finished_games = []
+    for p in subsession.get_players():
+        if p in ids_not_excluded:
+            players_finished_games.append(p)
+    subsession.session.vars['players_finished_games'] = players_finished_games
+    for p in subsession.get_players():
+        p.games_finished = p.participant.vars['games_finished']
+        if p.participant.vars['games_finished'] is True:
+            set_player_id(p)
 
 
 def set_payoffs(subsession: Subsession):
     secret_admin_participant_label = subsession.session.config['secret_admin_participant_label']
-    for player in subsession.get_players():
-        if player.participant.label != secret_admin_participant_label:
-            set_payoff(player)
+    for p in subsession.get_players():
+        if p.participant.label != secret_admin_participant_label and p.participant.vars['games_finished'] is True:
+            set_payoff(p)
+
+
+def set_player_id(player: Player):
+    player_ids = player.session.vars['player_ids']
+    id_in_group = player.id_in_group
+    ids_not_excluded = player.session.vars['ids_not_excluded']
+    id_in_player_ids = ids_not_excluded.index(id_in_group)
+    player.participant.vars['player_id'] = player_ids[id_in_player_ids]
+    player.player_id = player_ids[id_in_player_ids]
 
 
 def randomise_games(player: Player):
@@ -149,7 +181,6 @@ def randomise_games(player: Player):
     player.participant.vars['game_ids'] = game_ids
     player.participant_code = player.participant.code
     player.participant_playing = True
-    player.player_id = player.participant.vars['player_id']
 
 
 def generate_payoffs(player: Player):
@@ -187,20 +218,20 @@ def set_payoff(player: Player):
     payment_payoffs = []
     results_payments = []
     player_id = player.participant.vars['player_id']
-    others = player.get_others_in_group()
-    if (player_id % 2) == 0:
-        for o in others:
-            opponent_id = o.participant.vars['player_id']
-            if opponent_id == player_id - 1:
-                opponent = o
+    player_ids = player.session.vars['player_ids']
+    ids_excluded = player.session.vars['ids_excluded']
+    players_finished_games = player.group.get_players()
+    for i in range(len(ids_excluded)):
+        others_excluded = player.group.get_player_by_id(ids_excluded[i])
+        players_finished_games.remove(others_excluded)
+    if player_id < len(players_finished_games):
+        opponent_id = player_id + 1
     else:
-        if player_id == player.session.num_participants:
-            opponent = player.group.get_player_by_id(1)
-        else:
-            for o in others:
-                opponent_id = o.participant.vars['player_id']
-                if opponent_id == player_id + 1:
-                    opponent = o
+        opponent_id = 1
+    for p in players_finished_games:
+        if p.participant.vars['player_id'] == opponent_id:
+            opponent = p
+    player.opponent_id_in_session = opponent.id_in_group
     opponent_game_id = opponent.participant.vars['game_ids']
     opponent_games = []
     player_game_id = player.participant.vars['game_ids']
@@ -283,6 +314,7 @@ class DecisionPage(Page):
     def before_next_page(player: Player, timeout_happened):
         if player.round_number == C.NUM_ROUNDS:
             player.participant.status = "waiting_for_survey"
+            player.participant.vars['games_finished'] = True
 
 
 class ResultsCalculate(Page):
@@ -306,6 +338,7 @@ class ResultsCalculate(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        set_ids(player.subsession)
         set_payoffs(player.subsession)
 
 
