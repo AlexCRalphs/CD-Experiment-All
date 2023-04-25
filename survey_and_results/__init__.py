@@ -43,6 +43,7 @@ class Player(BasePlayer):
                                        'Physics', 'PolSci', 'Psych', 'Other'], widget=widgets.RadioSelect, blank=True)
     decision_description = models.LongStringField(blank=True)
     email = models.StringField(blank=True)
+    participant_name = models.StringField(blank=True)
     country = models.StringField(blank=True)
 
     finished_late = models.IntegerField(initial=0)
@@ -75,7 +76,7 @@ class Survey(Page):
 
 class PaymentInfo(Page):
     form_model = 'player'
-    form_fields = ['email', 'country']
+    form_fields = ['email', 'participant_name', 'country']
 
     @staticmethod
     def is_displayed(player: Player):
